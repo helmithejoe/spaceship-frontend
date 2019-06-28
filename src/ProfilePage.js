@@ -17,7 +17,6 @@ class App extends Component {
             currentScreen:[],
             profileScreen:[],
             onlineScreen:[],
-            loginScreen:[],
             profile:[],
             title: 'My Profile',
             onlineUsers:[],
@@ -76,7 +75,6 @@ class App extends Component {
         // load all other pages here
         
         var onlineScreen = [];
-        var loginScreen = [];
         
         onlineScreen.push(<OnlineList
             appContext={self.props.appContext}
@@ -91,15 +89,8 @@ class App extends Component {
             key={"Nav"}
             navChild="1"
         />);
-                       
-       loginScreen.push(<Loginscreen
-            appContext={self.props.appContext}
-            parentContext={self.props.appContext}
-            key={"LoginScreen"}
-        />);
         
         self.setState({onlineScreen : onlineScreen});
-        self.setState({loginScreen : loginScreen});
     }
 
     fetchOnlineUsers(){

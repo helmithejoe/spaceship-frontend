@@ -35,11 +35,13 @@ export default function Nav(props) {
             
             props.parentContext.fetchOnlineUsers();
         } else if(newValue == 2) {
-            props.parentContext.setState({currentScreen : props.parentContext.state.loginScreen});
-            props.parentContext.setState({title : 'Login'});
             
             // stop updating activity when logout
             clearInterval(props.parentContext.state.interval);
+            
+            // actual logout mechanism
+            localStorage.clear();
+            window.location.href = '/';
         }
         
       }}
