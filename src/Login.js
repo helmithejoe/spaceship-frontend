@@ -62,11 +62,14 @@ class Login extends Component {
         password:'',
         loginComponent:localloginComponent,
         errors:'',
-        token : ''
+        token : '',
+        msg: props.msg
     }
+    
   }
   
   handleClick(event) {
+    this.setState({ msg: '' });
     var apiBaseUrl = this.props.appContext.state.apiEndpoint;
     var self = this;
       
@@ -113,7 +116,7 @@ class Login extends Component {
            />
         <br/>
         {this.state.errors}
-        {this.props.msg}
+        {this.state.msg}
         </MuiThemeProvider>
         {this.state.loginComponent}
       </div>

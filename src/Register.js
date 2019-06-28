@@ -39,10 +39,17 @@ class Register extends Component {
         axios.post(apiBaseUrl + '/user/signup', payload)
             .then(function(response) {
                 console.log(response);
-                if (response.data.success === true) {
+                if (response.data.success == true) {
                     var loginscreen=[];
                     var activate_msg = "Registration success. Please check your email to activate your account.";
-                    loginscreen.push(<Login msg={activate_msg} parentContext={this} appContext={self.props.appContext} />);
+                    
+                    // push the Login page using original parent istead of {this}
+                    loginscreen.push(<Login
+                        msg={activate_msg}
+                        parentContext={self.props.parentContext}
+                        appContext={self.props.appContext}
+                        key={"Login"}
+                    />);
                                      
                     var loginmessage = "Not registered yet? Please click Register button below.";
                     self.props.parentContext.setState({
