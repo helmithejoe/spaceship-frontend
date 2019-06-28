@@ -41,7 +41,7 @@ export default function Nav(props) {
             
             // actual logout mechanism
             localStorage.clear();
-            window.location.href = '/';
+            document.location.href = '';
         }
         
       }}
