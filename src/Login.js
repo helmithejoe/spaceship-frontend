@@ -12,14 +12,19 @@ class Login extends Component {
     
     var loginmessage = "Not registered yet? Please click Register button below.";
     var loginButtons = [];
+      
     loginButtons.push(
       <div key={"Login-Div"}>
       <MuiThemeProvider>
         <div>
-           <RaisedButton label={"Register"} primary={true} style={style} onClick={(event) => this.props.parentContext.handleClick(event)}/>
+           <RaisedButton
+                label={"Register"}
+                primary={true}
+                style={style}
+                onClick={(event) => this.props.parentContext.handleClick(event)}
+            />
        </div>
        </MuiThemeProvider>
-       
       </div>
     );
     
@@ -30,59 +35,73 @@ class Login extends Component {
     localloginComponent.push(
       <MuiThemeProvider key={"theme"}>
         <div>
-         <TextField
-           hintText="Enter your email address"
-           floatingLabelText="Email"
-           onChange={(event,newValue) => this.setState({email:newValue})}
-           />
-         <br/>
-           <TextField
-             type="password"
-             hintText="Enter your Password"
-             floatingLabelText="Password"
-             onChange = {(event,newValue) => this.setState({password:newValue})}
+            <TextField
+                hintText="Enter your email address"
+                floatingLabelText="Email"
+                onChange={(event,newValue) => this.setState({email:newValue})}
+            />
+            <br/>
+            <TextField
+                type="password"
+                hintText="Enter your Password"
+                floatingLabelText="Password"
+                onChange = {(event,newValue) => this.setState({password:newValue})}
              />
-           <br/>
-           <RaisedButton label="Login" primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
-       </div>
+            <br/>
+            <RaisedButton
+                label="Login"
+                primary={true}
+                style={style}
+                onClick={(event) => this.handleClick(event)}
+            />
+         </div>
        </MuiThemeProvider>
     )
     this.state={
-      email:'',
-      password:'',
-      loginComponent:localloginComponent,
+        email:'',
+        password:'',
+        loginComponent:localloginComponent,
         errors:'',
         token : ''
     }
   }
   
-  handleClick(event){
+  handleClick(event) {
     var apiBaseUrl = "http://localhost/spaceship";
     var self = this;
+      
     var payload={
-      "email":this.state.email,
-	    "password":this.state.password,
+        "email":this.state.email,
+        "password":this.state.password,
     }
+    
+    // send login ajax request
     axios.post(apiBaseUrl+'/user/login', payload)
-   .then(function (response) {
-     console.log(response);
-     if(response.data.success == true){
-       var profileScreen=[];
-        self.setState({
-            token : response.data.data.jwt_token
+        .then(function (response) {
+            console.log(response);
+            if(response.data.success == true) {
+                var profileScreen=[];
+                self.setState({
+                    token : response.data.data.jwt_token
+                });
+                
+                // load profile page when success
+                profileScreen.push(<ProfilePage
+                    parentContext={self}
+                    appContext={self.props.appContext}
+                    token={self.state.token}
+                    key={"ProfilePage"}
+                />);
+                self.props.appContext.setState({ loginPage:[], profileScreen:profileScreen });
+            } else {
+                self.setState({
+                    errors : 'Error : ' + response.data.error.join(' ')
+                });
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
         });
-       profileScreen.push(<ProfilePage parentContext={self} appContext={self.props.appContext} token={self.state.token} key={"ProfilePage"} />)
-       self.props.appContext.setState({loginPage:[], profileScreen:profileScreen})
-     }
-     else{
-       self.setState({
-            errors : 'Error : ' + response.data.error.join(' ')
-        });
-     }
-   })
-   .catch(function (error) {
-     console.log(error);
-   });
   }
 
   render() {

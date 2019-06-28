@@ -20,10 +20,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function OnlineList(props) {
-  const classes = useStyles();
-    //alert(props.parentContext.state.onlineUsers);
-    //props.fetchOnlineUsers();
-    //.then(function(){
+    const classes = useStyles();
     return props.parentContext.state.onlineUsers.map(function(item, i) {
          return (
             <List className={classes.root}>
@@ -52,5 +49,4 @@ export default function OnlineList(props) {
             </List>
           );
         });
-    //});
 }

@@ -24,7 +24,8 @@ export default function Nav(props) {
       value={value}
       onChange={(event, newValue) => {
         setValue(newValue);
-      
+        
+        // if the menu changed then change the page screen and title accordingly
         if(newValue == 0) {
             props.parentContext.setState({currentScreen : props.parentContext.state.profileScreen});
             props.parentContext.setState({title : 'My Profile'});
@@ -36,6 +37,8 @@ export default function Nav(props) {
         } else if(newValue == 2) {
             props.parentContext.setState({currentScreen : props.parentContext.state.loginScreen});
             props.parentContext.setState({title : 'Login'});
+            
+            // stop updating activity when logout
             clearInterval(props.parentContext.state.interval);
         }
         

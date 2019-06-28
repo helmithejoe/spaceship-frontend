@@ -11,154 +11,144 @@ import AppBar from 'material-ui/AppBar';
 import Loginscreen from './Loginscreen'
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-        currentScreen:[],
-        profileScreen:[],
-        onlineScreen:[],
-        loginScreen:[],
-        profile:[],
-        title: 'My Profile',
-        onlineUsers:[],
-        interval: ''
-    };
-      props.parentContext.setState({ loginButtons: [] });
-  }
-
-  componentDidMount(){
-    
-    var interval = setInterval(() => this.updateLastActivity(), 30000);
-    this.setState({ interval : interval });
-      
-    var apiBaseUrl = "http://localhost/spaceship";
-    var self = this;
-    
-    const headers = {
-      Authorization: 'Bearer ' + this.props.token,
+    constructor(props) {
+        super(props);
+        this.state = {
+            currentScreen:[],
+            profileScreen:[],
+            onlineScreen:[],
+            loginScreen:[],
+            profile:[],
+            title: 'My Profile',
+            onlineUsers:[],
+            interval: ''
+        };
+        props.parentContext.setState({ loginButtons: [] });
     }
-    
-    axios.get(apiBaseUrl+'/user/profile', {headers:headers})
-   .then(function (response) {
-     console.log(response);
-     if(response.data.success == true){
-        self.setState({ profile : response.data.data });
-        var profileScreen = [];
-         
-        profileScreen.push(<ProfileCard
-            first_name={self.state.profile.first_name}
-            last_name={self.state.profile.last_name}
-            bio={self.state.profile.bio}
-            appContext={self.props.appContext}
-            key={"ProfileCard"}
-        />);
 
-        profileScreen.push(<Nav
+    componentDidMount(){
+        // start updating activity when this component mounted
+        // interval is 30 seconds
+        var interval = setInterval(() => this.updateLastActivity(), 30000);
+        this.setState({ interval : interval });
+
+        var apiBaseUrl = "http://localhost/spaceship";
+        var self = this;
+    
+        const headers = {
+            Authorization: 'Bearer ' + this.props.token,
+        }
+    
+        axios.get(apiBaseUrl+'/user/profile', {headers:headers})
+        .then(function (response) {
+            console.log(response);
+            if(response.data.success == true) {
+                self.setState({ profile : response.data.data });
+                var profileScreen = [];
+                
+                // when load profile is success then load ProfileCard component
+                profileScreen.push(<ProfileCard
+                    first_name={self.state.profile.first_name}
+                    last_name={self.state.profile.last_name}
+                    bio={self.state.profile.bio}
+                    appContext={self.props.appContext}
+                    key={"ProfileCard"}
+                />);
+                
+                // also don't forget to load the Nav
+                profileScreen.push(<Nav
+                    appContext={self.props.appContext}
+                    parentContext={self}
+                    key={"Nav"}
+                    navChild="0"
+                />);
+         
+                 self.setState({profileScreen : profileScreen});
+                 self.setState({currentScreen : profileScreen});
+            } else {
+                console.log(response.error);
+            }
+        })
+       .catch(function (error) {
+         console.log(error);
+       });
+        
+        // load all other pages here
+        
+        var onlineScreen = [];
+        var loginScreen = [];
+        
+        onlineScreen.push(<OnlineList
+            appContext={self.props.appContext}
+            parentContext={self}
+            key={"OnlineList"}
+            fetchOnlineUsers={self.fetchOnlineUsers()}
+        />);
+    
+        onlineScreen.push(<Nav
             appContext={self.props.appContext}
             parentContext={self}
             key={"Nav"}
-            navChild="0"
+            navChild="1"
         />);
-         
-         self.setState({profileScreen : profileScreen});
-         self.setState({currentScreen : profileScreen});
-     }
-     else{
-       console.log(response.error);
-     }
-    
-    
-   })
-   .catch(function (error) {
-     console.log(error);
-   });
-      
-    var onlineScreen = [];
-    var loginScreen = [];
-        
-    onlineScreen.push(<OnlineList
-        appContext={self.props.appContext}
-        parentContext={self}
-        key={"OnlineList"}
-        fetchOnlineUsers={self.fetchOnlineUsers()}
-    />);
-    
-    onlineScreen.push(<Nav
-        appContext={self.props.appContext}
-        parentContext={self}
-        key={"Nav"}
-        navChild="1"
-    />);
                        
-   loginScreen.push(<Loginscreen
-        appContext={self.props.appContext}
-        parentContext={self.props.appContext}
-        key={"LoginScreen"}
-    />);
+       loginScreen.push(<Loginscreen
+            appContext={self.props.appContext}
+            parentContext={self.props.appContext}
+            key={"LoginScreen"}
+        />);
         
-    self.setState({onlineScreen : onlineScreen});
-    self.setState({loginScreen : loginScreen});
-      
-    
-  }
-    
-
-fetchOnlineUsers(){
-      
-    var apiBaseUrl = "http://localhost/spaceship";
-    var self = this;
-    
-    const headers = {
-      Authorization: 'Bearer ' + this.props.token,
+        self.setState({onlineScreen : onlineScreen});
+        self.setState({loginScreen : loginScreen});
     }
-    
-    axios.get(apiBaseUrl+'/user/online_users', {headers:headers})
-   .then(function (response) {
-     console.log(response);
-     if(response.data.success == true){
-        self.setState({ onlineUsers : response.data.data });
-     }
-     else{
-       console.log(response.error);
-     }
-    
-    
-   })
-   .catch(function (error) {
-     console.log(error);
-   });
-      
-    
-  }
 
-    updateLastActivity(){
-      
+    fetchOnlineUsers(){
+
         var apiBaseUrl = "http://localhost/spaceship";
         var self = this;
 
         const headers = {
-          Authorization: 'Bearer ' + this.props.token,
+            Authorization: 'Bearer ' + this.props.token,
+        }
+
+        axios.get(apiBaseUrl+'/user/online_users', { headers:headers })
+        .then(function (response) {
+            console.log(response);
+            if(response.data.success == true){
+                self.setState({ onlineUsers : response.data.data });
+            } else {
+                console.log(response.error);
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
+    updateLastActivity(){
+        var apiBaseUrl = "http://localhost/spaceship";
+        var self = this;
+
+        const headers = {
+            Authorization: 'Bearer ' + this.props.token,
         }
 
         axios.get(apiBaseUrl+'/user/update_last_activity', {headers:headers})
-       .then(function (response) {
-         console.log(response);
-         if(response.data.success == true){
-            console.log("activity updated.");
-         }
-         else{
-           console.log(response.error);
-         }
+        .then(function (response) {
+            console.log(response);
+            if(response.data.success == true){
+                console.log("activity updated.");
+            }
+            else{
+                console.log(response.error);
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 
-
-       })
-       .catch(function (error) {
-         console.log(error);
-       });
-      
     }
     
-  
   render() {
     if(this.state.title != 'Login') return (
       <div className="App">
@@ -174,7 +164,7 @@ fetchOnlineUsers(){
     );
       
     return (
-          <div>{this.state.currentScreen}</div>
+        <div>{this.state.currentScreen}</div>
     );
   }
 }
