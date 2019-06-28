@@ -7,7 +7,8 @@ class App extends Component {
     super(props);
     this.state = {
       loginPage : [],
-      profileScreen : []
+      profileScreen : [],
+      apiEndpoint: 'http://localhost/spaceship'
     }
   }
   componentWillMount(){

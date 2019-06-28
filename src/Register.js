@@ -25,7 +25,7 @@ class Register extends Component {
     }
     
     handleClick(event) {
-        var apiBaseUrl = "http://localhost/spaceship";
+        var apiBaseUrl = this.props.appContext.state.apiEndpoint;
         var self = this;
         
         var payload = {

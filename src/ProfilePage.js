@@ -32,7 +32,7 @@ class App extends Component {
         var interval = setInterval(() => this.updateLastActivity(), 30000);
         this.setState({ interval : interval });
 
-        var apiBaseUrl = "http://localhost/spaceship";
+        var apiBaseUrl = this.props.appContext.state.apiEndpoint;
         var self = this;
     
         const headers = {
@@ -104,7 +104,7 @@ class App extends Component {
 
     fetchOnlineUsers(){
 
-        var apiBaseUrl = "http://localhost/spaceship";
+        var apiBaseUrl = this.props.appContext.state.apiEndpoint;
         var self = this;
 
         const headers = {
@@ -126,7 +126,7 @@ class App extends Component {
     }
 
     updateLastActivity(){
-        var apiBaseUrl = "http://localhost/spaceship";
+        var apiBaseUrl = this.props.appContext.state.apiEndpoint;
         var self = this;
 
         const headers = {
