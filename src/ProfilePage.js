@@ -20,19 +20,19 @@ class App extends Component {
         loginScreen:[],
         profile:[],
         title: 'My Profile',
-        onlineUsers:[]
+        onlineUsers:[],
+        interval: ''
     };
       props.parentContext.setState({ loginButtons: [] });
   }
 
   componentDidMount(){
+    
+    var interval = setInterval(() => this.updateLastActivity(), 30000);
+    this.setState({ interval : interval });
       
     var apiBaseUrl = "http://localhost/spaceship";
     var self = this;
-    var payload={
-      "email":this.state.email,
-	    "password":this.state.password,
-    }
     
     const headers = {
       Authorization: 'Bearer ' + this.props.token,
@@ -107,10 +107,6 @@ fetchOnlineUsers(){
       
     var apiBaseUrl = "http://localhost/spaceship";
     var self = this;
-    var payload={
-      "email":this.state.email,
-	    "password":this.state.password,
-    }
     
     const headers = {
       Authorization: 'Bearer ' + this.props.token,
@@ -134,6 +130,33 @@ fetchOnlineUsers(){
       
     
   }
+
+    updateLastActivity(){
+      
+        var apiBaseUrl = "http://localhost/spaceship";
+        var self = this;
+
+        const headers = {
+          Authorization: 'Bearer ' + this.props.token,
+        }
+
+        axios.get(apiBaseUrl+'/user/update_last_activity', {headers:headers})
+       .then(function (response) {
+         console.log(response);
+         if(response.data.success == true){
+            console.log("activity updated.");
+         }
+         else{
+           console.log(response.error);
+         }
+
+
+       })
+       .catch(function (error) {
+         console.log(error);
+       });
+      
+    }
     
   
   render() {

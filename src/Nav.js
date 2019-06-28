@@ -36,6 +36,7 @@ export default function Nav(props) {
         } else if(newValue == 2) {
             props.parentContext.setState({currentScreen : props.parentContext.state.loginScreen});
             props.parentContext.setState({title : 'Login'});
+            clearInterval(props.parentContext.state.interval);
         }
         
       }}

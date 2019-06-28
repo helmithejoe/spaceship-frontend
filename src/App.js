@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
 import './App.css';
 import LoginScreen from './Loginscreen';
+
 class App extends Component {
   constructor(props){
     super(props);
-    this.state={
-      loginPage:[],
-      profileScreen:[]
+    this.state = {
+      loginPage : [],
+      profileScreen : []
     }
   }
   componentWillMount(){
-    var loginPage =[];
+    var loginPage = [];
     loginPage.push(<LoginScreen appContext={this} key={"login-screen"}/>);
     this.setState({
-                  loginPage:loginPage
-                    })
+        loginPage:loginPage
+    })
   }
   render() {
     return (
