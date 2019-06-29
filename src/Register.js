@@ -17,6 +17,7 @@ class Register extends Component {
             email : '',
             password : '',
             errors: '',
+            disableButton: false
         }
     }
     
@@ -25,6 +26,7 @@ class Register extends Component {
     }
     
     handleClick(event) {
+        this.setState({ disableButton: true });
         var apiBaseUrl = this.props.appContext.state.apiEndpoint;
         var self = this;
         
@@ -65,6 +67,7 @@ class Register extends Component {
                     });
                     
                 }
+                self.setState({ disableButton: false });
             })
             .catch(function(error) {
                 console.log(error);
@@ -119,6 +122,7 @@ class Register extends Component {
                         <RaisedButton
                             label = "Register"
                             primary = {true}
+                            disabled = {this.state.disableButton}
                             style = {style}
                             onClick = { (event) => this.handleClick(event) }
                         />
